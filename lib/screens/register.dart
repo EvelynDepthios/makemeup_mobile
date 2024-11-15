@@ -21,21 +21,29 @@ class _RegisterPageState extends State<RegisterPage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'MAKE me UP',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
-            fontWeight: FontWeight.w900,
-            fontSize: 28.0,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo di sebelah kiri
+            Image.asset(
+              'assets/images/logo.png', // Ganti dengan path logo Anda
+              height: 40, // Sesuaikan ukuran logo
+            ),
+            const SizedBox(width: 10), // Memberikan jarak antara logo dan teks
+            // Judul di sebelah kanan logo
+            Text(
+              'MAKE me UP',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
+                fontWeight: FontWeight.w900,
+                fontSize: 28.0,
+              ),
+            ),
+          ],
         ),
+        surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
+        scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
         backgroundColor: Theme.of(context).colorScheme.primary, // Light pink background for the AppBar
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
       body: Center(
         child: SingleChildScrollView(

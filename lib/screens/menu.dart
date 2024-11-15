@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:make_me_up_mobile/screens/productentry_form.dart';
 import 'package:make_me_up_mobile/widgets/left_drawer.dart';
 import 'package:make_me_up_mobile/widgets/product_card.dart';
 
-
 class MyHomePage extends StatelessWidget {
-    MyHomePage({super.key});
-    final String npm = '2306207543'; // NPM
-    final String name = 'Evelyn Depthios'; // Nama
-    final String className = 'PBP F'; // Kelas
+  MyHomePage({super.key});
+  final String npm = '2306207543'; // NPM
+  final String name = 'Evelyn Depthios'; // Nama
+  final String className = 'PBP F'; // Kelas
 
-    final List<ItemHomepage> items = [
-      ItemHomepage("View Products", Icons.shopping_bag, color: const Color(0xffffb3c6)),  // Carnation pink untuk tombol View Product
-      ItemHomepage("Add Product", Icons.add_shopping_cart, color: const Color(0xffff8fab)), // Pastel pink untuk tombol Add Product
-      ItemHomepage("Logout", Icons.exit_to_app, color: const Color(0xfffb6f92)), // Very light pink untuk tombol Logout
-    ];
+  final List<ItemHomepage> items = [
+    ItemHomepage("View Products", Icons.shopping_bag, color: const Color(0xffffb3c6)),  // Carnation pink untuk tombol View Product
+    ItemHomepage("Add Product", Icons.add_shopping_cart, color: const Color(0xffff8fab)), // Pastel pink untuk tombol Add Product
+    ItemHomepage("Logout", Icons.exit_to_app, color: const Color(0xfffb6f92)), // Very light pink untuk tombol Logout
+  ];
 
   @override  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'MAKE me UP',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
-            fontWeight: FontWeight.w900,
-            fontSize: 28.0,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo di sebelah kiri
+            Image.asset(
+              'assets/images/logo.png', // Ganti dengan path logo Anda
+              height: 40, // Sesuaikan ukuran logo
+            ),
+            const SizedBox(width: 10), // Memberikan jarak antara logo dan teks
+            // Judul di sebelah kanan logo
+            Text(
+              'MAKE me UP',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
+                fontWeight: FontWeight.w900,
+                fontSize: 28.0,
+              ),
+            ),
+          ],
         ),
         surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
         scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
@@ -73,7 +83,6 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   // Grid untuk menampilkan ItemCard dalam bentuk grid 3 kolom.
                   GridView.count(
                     primary: true,

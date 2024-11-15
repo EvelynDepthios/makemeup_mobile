@@ -21,6 +21,12 @@ class LeftDrawer extends StatelessWidget {
             ),
             child: Column(
               children: [
+                // Logo Image
+                Image.asset(
+                  'assets/images/logo.png',  // Pastikan path gambar sesuai
+                  height: 30.0, // Atur ukuran logo sesuai kebutuhan
+                ),
+                const SizedBox(width: 10), // Space antara logo dan title
                 Text(
                   'MAKE me UP',
                   textAlign: TextAlign.center,

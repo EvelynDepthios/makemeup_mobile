@@ -35,16 +35,29 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Product Entry',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
-            fontWeight: FontWeight.w900,
-            fontSize: 24.0,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo di sebelah kiri
+            Image.asset(
+              'assets/images/logo.png', // Ganti dengan path logo Anda
+              height: 40, // Sesuaikan ukuran logo
+            ),
+            const SizedBox(width: 10), // Memberikan jarak antara logo dan teks
+            // Judul di sebelah kanan logo
+            Text(
+              'Create Product',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
+                fontWeight: FontWeight.w900,
+                fontSize: 28.0,
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
         surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
         scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
+        backgroundColor: Theme.of(context).colorScheme.primary, // Light pink background for the AppBar
       ),
       drawer: const LeftDrawer(),
       backgroundColor: const Color(0xFFFCE4EC),
