@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:make_me_up_mobile/screens/menu.dart';
 import 'package:make_me_up_mobile/screens/productentry_form.dart';
+import 'package:make_me_up_mobile/screens/list_productentry.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:make_me_up_mobile/screens/login.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Drawer(
       child: ListView(
         children: [
@@ -32,7 +37,7 @@ class LeftDrawer extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.black,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -64,6 +69,43 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text('View Products'),
+            onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+                );
+            },
+        ),
+        ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () async {
+                final response = await request.logout(
+                  "http://127.0.0.1:8000/auth/logout/");
+                String message = response["message"];
+                if (context.mounted) {
+                  if (response['status']) {
+                      String uname = response["username"];
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$message Sampai jumpa, $uname."),
+                      ));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                  } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(message),
+                          ),
+                      );
+                  }
+              }
+            },
+        ),
         ],
       ),
     );

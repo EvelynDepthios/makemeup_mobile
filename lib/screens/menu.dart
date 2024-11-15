@@ -28,6 +28,8 @@ class MyHomePage extends StatelessWidget {
             fontSize: 28.0,
           ),
         ),
+        surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
+        scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
         backgroundColor: Theme.of(context).colorScheme.primary, // Light pink background for the AppBar
       ),
       backgroundColor: const Color(0xFFFEF0F5), // Very light pink background
@@ -64,7 +66,7 @@ class MyHomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Welcome to MAKE me UP',
+                      'Welcome to MAKE me UP!',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,

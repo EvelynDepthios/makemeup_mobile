@@ -6,6 +6,8 @@
 
 [Tugas 8](#tugas-8)
 
+[Tugas 9](#tugas-9)
+
 # Tugas 7
 ##  Jelaskan apa yang dimaksud dengan stateless widget dan stateful widget, dan jelaskan perbedaan dari keduanya.
 - **Stateless Widget**: Widget yang tidak memiliki state internal yang dapat berubah.Artinya, setelah widget ini dirender, ia tidak akan berubah selama siklus hidupnya. Contoh umum dari stateless widget adalah `Text`, `Icon`, dan `RaisedButton` sederhana.
@@ -423,3 +425,110 @@ class LeftDrawer extends StatelessWidget {
   }
 }
 ```
+
+# Tugas 9
+## Jelaskan mengapa kita perlu membuat model untuk melakukan pengambilan ataupun pengiriman data JSON? Apakah akan terjadi error jika kita tidak membuat model terlebih dahulu?
+Membuat model sangat penting untuk menangani pengambilan dan pengiriman data JSON karena:
+
+- **Struktur Data yang Terstandarisasi**: Dengan model, kita dapat memastikan bahwa data yang dikirim atau diterima sesuai dengan struktur yang diharapkan, sehingga menghindari error yang mungkin terjadi karena perbedaan format.
+- **Validasi Data**: Model dapat membantu memvalidasi data sebelum dikirim atau disimpan di backend, memastikan bahwa semua field yang dibutuhkan terisi dengan benar.
+- **Mapping Data**: Model memudahkan untuk memetakan data JSON ke dalam objek di Flutter, sehingga kita dapat dengan mudah mengakses dan mengelola data tersebut.
+  
+Tanpa model, error bisa terjadi saat mengambil atau mengirim data, terutama jika data yang diterima tidak memiliki format yang konsisten. Hal ini bisa menyebabkan kesalahan parsing atau null reference di aplikasi Flutter.
+
+Source : https://docs.flutter.dev/cookbook/networking/background-parsing, https://docs.flutter.dev/data-and-backend/serialization/json
+
+## Jelaskan fungsi dari library http yang sudah kamu implementasikan pada tugas ini
+Library `http` pada Flutter digunakan untuk melakukan **request HTTP** seperti `GET`, `POST`, `PUT`, dan `DELETE` ke server. Berikut adalah beberapa fungsi utama dari library `http`:
+
+- **Mengirim Request**: Mengirimkan request HTTP ke API server, seperti untuk mengambil data (`GET`) atau mengirim data (`POST`).
+- **Menerima Response**: Menerima response dari server dan memproses data yang diterima, termasuk data JSON.
+- **Autentikasi**: Dapat digunakan bersama dengan token untuk melakukan autentikasi pengguna.
+
+**Contoh Implementasi :** 
+```dart
+```
+Source : https://pub.dev/packages/http
+
+## Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance `CookieRequest` perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+`CookieRequest` adalah sebuah class yang bertugas untuk **menyimpan cookie** yang diperoleh setelah login dan menggunakannya untuk **request selanjutnya**. Ini sangat berguna terutama jika kita membutuhkan **session persistence**, di mana pengguna tetap login meskipun aplikasi ditutup dan dibuka kembali.
+
+- **Penyimpanan Status Autentikasi**: Setelah pengguna login, `CookieRequest` akan menyimpan session cookie. Cookie ini digunakan untuk **autentikasi request** berikutnya tanpa perlu login ulang.
+- **Berbagi di Seluruh Aplikasi**: Dengan membagikan instance `CookieRequest` ke seluruh komponen, kita dapat memastikan bahwa semua request yang membutuhkan autentikasi memiliki akses ke cookie yang sama.
+
+Tanpa berbagi instance ini, **autentikasi pengguna mungkin gagal** karena komponen lain tidak memiliki akses ke cookie yang valid.
+
+Source : https://docs.djangoproject.com/en/5.1/topics/auth/
+
+## Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.
+
+## Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+
+## Implementasi Checklist
+### Memastikan deployment proyek tugas Django kamu telah berjalan dengan baik.
+
+### Mengimplementasikan fitur registrasi akun pada proyek tugas Flutter.
+
+## Membuat halaman login pada proyek tugas Flutter.
+
+## Mengintegrasikan sistem autentikasi Django dengan proyek tugas Flutter.
+
+## Membuat model kustom sesuai dengan proyek aplikasi Django.
+
+## Membuat halaman yang berisi daftar semua item yang terdapat pada endpoint JSON di Django yang telah kamu deploy.
+1. ### Tampilkan name, price, dan description dari masing-masing item pada halaman ini.
+2. ### Membuat halaman detail untuk setiap item yang terdapat pada halaman daftar Item.
+3. ### Halaman ini dapat diakses dengan menekan salah satu item pada halaman daftar Item.
+4. ### Tampilkan seluruh atribut pada model item kamu pada halaman ini.
+5. ### Tambahkan tombol untuk kembali ke halaman daftar item.
+6. ### Melakukan filter pada halaman daftar item dengan hanya menampilkan item yang terasosiasi dengan pengguna yang login.
+
+
+
+### 4. **Mekanisme Pengiriman Data dari Input hingga Ditampilkan pada Flutter**
+Mekanisme pengiriman data pada aplikasi Flutter yang terhubung dengan backend (Django) dapat dijelaskan sebagai berikut:
+
+
+
+1. **Input Data**: Pengguna mengisi data di form pada aplikasi Flutter.
+2. **Pengiriman Data**: Flutter mengirim data ke server Django menggunakan `http.post()` atau metode yang sesuai.
+   ```dart
+   final response = await http.post(
+     Uri.parse('https://example.com/api/submit'),
+     headers: {'Content-Type': 'application/json'},
+     body: jsonEncode({'key': value}),
+   );
+   ```
+3. **Pemrosesan di Backend**: Server Django menerima request, memproses data, dan memberikan response (misalnya, status 200 jika berhasil).
+4. **Penerimaan Response**: Flutter menerima response dari server dan memperbarui UI dengan data yang diterima.
+
+**Referensi**:
+- [Django REST Framework](https://www.django-rest-framework.org/)
+- [Flutter Form Handling](https://docs.flutter.dev/cookbook/forms)
+
+---
+
+### 5. **Mekanisme Autentikasi dari Login, Register, hingga Logout**
+Berikut adalah alur autentikasi dari login, registrasi, dan logout:
+
+**A. Register:**
+1. **Input Data**: Pengguna mengisi form registrasi di Flutter.
+2. **Pengiriman Data**: Data dikirim ke server Django menggunakan `http.post()`.
+3. **Validasi di Django**: Django memvalidasi data (misalnya, memastikan username unik).
+4. **Response**: Jika berhasil, Django mengirim response sukses, dan Flutter menampilkan notifikasi kepada pengguna.
+
+**B. Login:**
+1. **Input Data**: Pengguna mengisi form login.
+2. **Pengiriman Data**: Flutter mengirim data ke endpoint login Django.
+3. **Autentikasi di Django**: Django memeriksa kredensial dan, jika valid, mengirimkan session cookie.
+4. **Menyimpan Session di Flutter**: Cookie disimpan di `CookieRequest` dan digunakan untuk request selanjutnya.
+5. **Navigasi**: Jika berhasil login, pengguna diarahkan ke halaman beranda.
+
+**C. Logout:**
+1. **Mengirim Request Logout**: Flutter mengirim request logout ke Django.
+2. **Hapus Session**: Django menghapus session cookie.
+3. **Hapus Cookie di Flutter**: Flutter menghapus cookie dari `CookieRequest` dan mengarahkan pengguna kembali ke halaman login.
+
+**Referensi**:
+- [Django Authentication System](https://docs.djangoproject.com/en/2.2/topics/auth/)
+- [Flutter State Management](https://docs.flutter.dev/development/data-and-backend/state-mgmt)

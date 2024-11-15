@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:make_me_up_mobile/widgets/left_drawer.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:make_me_up_mobile/screens/menu.dart';
+import 'dart:convert';
 
 class ProductEntryFormPage extends StatefulWidget {
   const ProductEntryFormPage({super.key});
@@ -11,301 +15,245 @@ class ProductEntryFormPage extends StatefulWidget {
 class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _brand = "";
-  String _name = "";
+  String _productName = "";
   String _description = "";
   String _category = "";
   int _price = 0;
-  int _rating = 0;
+  int _ratings = 0;
+
+  final List<String> _categories = [
+    'Lip Product',
+    'Eye Product',
+    'Face Product',
+    'Body Care',
+    'Hair Care',
+    'Fragrance',
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Add Product Entry',
+        title: Text('Create Product Entry',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.w900,
+            fontSize: 24.0,
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        iconTheme: const IconThemeData(color: Colors.white),
+        surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
+        scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
       ),
       drawer: const LeftDrawer(),
+      backgroundColor: const Color(0xFFFCE4EC),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter brand",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Brand",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _brand = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Brand cannot be empty!";
-                    }
-                    if (value.length > 100) {
-                      return "Brand cannot exceed 100 characters!";
-                    }
-                    return null;
-                  },
+                  ],
                 ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter product name",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Name",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField(
+                      "Brand",
+                      "Enter brand",
+                      (value) => setState(() => _brand = value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Brand cannot be empty!";
+                        }
+                        if (value.length > 100) {
+                          return "Brand cannot exceed 100 characters!";
+                        }
+                        return null;
+                      },
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _name = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Name cannot be empty!";
-                    }
-                    if (value.length > 100) {
-                      return "Name cannot exceed 100 characters!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter price",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Price",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      "Product Name",
+                      "Enter product name",
+                      (value) => setState(() => _productName = value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Product Name cannot be empty!";
+                        }
+                        if (value.length > 100) {
+                          return "Product Name cannot exceed 100 characters!";
+                        }
+                        return null;
+                      },
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _price = int.tryParse(value!) ?? 0;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Price cannot be empty!";
-                    }
-                    if (int.tryParse(value) == null) {
-                      return "Price must be an integer!";
-                    }
-                    if (int.parse(value) < 0) {
-                      return "Price cannot be negative!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter description",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Description",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      "Price",
+                      "Enter price",
+                      (value) => setState(() => _price = int.tryParse(value) ?? 0),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Price cannot be empty!";
+                        }
+                        if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                          return "Price must be a positive number!";
+                        }
+                        return null;
+                      },
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _description = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Description cannot be empty!";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter category",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Category",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      "Description",
+                      "Enter description",
+                      (value) => setState(() => _description = value),
+                      maxLines: 4,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Description cannot be empty!";
+                        }
+                        return null;
+                      },
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _category = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Category cannot be empty!";
-                    }
-                    if (value.length > 100) {
-                      return "Category cannot exceed 100 characters!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter rating",
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelText: "Rating",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                    const SizedBox(height: 16),
+                    _buildDropdown(),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      "Ratings",
+                      "Enter ratings (1-5)",
+                      (value) => setState(() => _ratings = int.tryParse(value) ?? 0),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Ratings cannot be empty!";
+                        }
+                        int? rating = int.tryParse(value);
+                        if (rating == null || rating < 1 || rating > 5) {
+                          return "Ratings must be between 1 and 5!";
+                        }
+                        return null;
+                      },
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _rating = int.tryParse(value!) ?? 0;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Rating cannot be empty!";
-                    }
-                    if (int.tryParse(value) == null) {
-                      return "Rating must be an integer!";
-                    }
-                    if (int.parse(value) < 0) {
-                      return "Rating cannot be negative!";
-                    }
-                    if (int.parse(value) > 5) {
-                      return "Rating cannot exceed 5!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Product saved successfully!',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                ,)
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildRichText("Brand :", _brand),
-                                    _buildRichText("Name :", _name),
-                                    _buildRichText("Price :", _price.toString()),
-                                    _buildRichText("Description :", _description),
-                                    _buildRichText("Category :", _category),
-                                    _buildRichText("Rating :", _rating.toString()),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: Text('OK',
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.onPrimary,
-                                        fontWeight: FontWeight.bold
-                                      )
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset();
-                                  },
-                                ),
-                              ],
+                    const SizedBox(height: 24),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final response = await request.postJson(
+                              "http://127.0.0.1:8000/create-flutter/",
+                              jsonEncode(<String, String>{
+                                'brand': _brand,
+                                'product_name': _productName,
+                                'description': _description,
+                                'category': _category,
+                                'price': _price.toString(),
+                                'ratings': _ratings.toString(),
+                              }),
                             );
-                          },
-                        );
-                      }
-                    },
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(color: Colors.black),
+                            if (context.mounted) {
+                              if (response['status'] == 'success') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Product successfully saved!")),
+                                );
+                                setState(() {
+                                  _brand = "";
+                                  _productName = "";
+                                  _description = "";
+                                  _category = "";
+                                  _price = 0;
+                                  _ratings = 0;
+                                });
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("An error occurred, try again.")),
+                                );
+                              }
+                            }
+                          }
+                        },
+                        child: const Text("Save", style: TextStyle(color: Colors.white)),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Helper function to build RichText with bold label and regular content
-  Widget _buildRichText(String label, String value) {
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: "$label ",
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          TextSpan(
-            text: value,
-            style: const TextStyle(color: Colors.black),
-          ),
-        ],
+  Widget _buildTextField(String label, String hint, Function(String) onChanged,
+      {int maxLines = 1, TextInputType keyboardType = TextInputType.text, required String? Function(String?) validator}) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        filled: true,
+        fillColor: Colors.pink[50],
       ),
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      onChanged: onChanged,
+      validator: validator,
+    );
+  }
+
+  Widget _buildDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: "Category",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        filled: true,
+        fillColor: Colors.pink[50],
+      ),
+      value: _category.isEmpty ? null : _category,
+      items: _categories.map((String category) {
+        return DropdownMenuItem<String>(
+          value: category,
+          child: Text(category),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() => _category = newValue!);
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please select a category!";
+        }
+        return null;
+      },
     );
   }
 }
